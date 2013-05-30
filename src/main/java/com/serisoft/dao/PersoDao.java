@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.serisoft.model.Personne;
+import static com.serisoft.model.Define.*;
 
 @Repository
 public class PersoDao implements IPersoDao {
@@ -18,9 +19,12 @@ public class PersoDao implements IPersoDao {
 
 	@Transactional()
 	public void deleteOne(Integer id) {
+
 		Personne p = this.findById(id);
 		if (p != null) {
 			em.remove(p);
+		} else {
+			throw new DaoException(String.format(msg_person_id_not_found, id),cs_id_not_found);
 		}
 
 	}
@@ -34,19 +38,29 @@ public class PersoDao implements IPersoDao {
 
 	@Transactional(readOnly = true)
 	public Personne findById(Integer id) {
-		return em.find(Personne.class, id);
+		Personne perso = em.find(Personne.class, id);
+		if (perso == null) {
+			throw new DaoException(String.format(msg_person_id_not_found, id),
+					cs_id_not_found);
 
+		}
+		return perso;
 	}
 
 	@Transactional
 	public Personne save(Personne perso) {
-		if (perso.getId() == null) {
-			em.persist(perso);
-			return perso;
-		} else {
-			return em.merge(perso);
-		}
+		try {
+			if (perso.getId() == null) {
+				em.persist(perso);
+			} else {
+				perso = em.merge(perso);
+			}
 
+			return perso;
+		} catch (Exception e) {
+			throw new DaoException(msg_error_save_person, cs_error_save);
+
+		}
 	}
 
 	@Transactional(readOnly = true)

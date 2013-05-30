@@ -46,7 +46,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j
 
     <servlet-mapping>
         <servlet-name>spring-mvc-rest-jpa</servlet-name>
-        <url-pattern>/rest/*</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
     
     

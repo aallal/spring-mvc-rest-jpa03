@@ -5,16 +5,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.hamcrest.core.IsNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
@@ -23,7 +20,7 @@ import com.serisoft.dao.IPersoDao;
 import com.serisoft.model.Personne;
 
 @Controller
-@RequestMapping("/personne2")
+@RequestMapping("/rest/personne2")
 public class PersoController2 {
 
 	@Autowired
@@ -47,10 +44,19 @@ public class PersoController2 {
 	 * @return the model and view
 	 */
 	private ModelAndView createErrorResponse(String sMessage) {
+		logger_c.debug("Exception déclenché au niveau  de la classe PersoController2 :["
+				+ sMessage + " ]");
 		return new ModelAndView(jsonView_i, ERROR_FIELD, sMessage);
 	}
 
-	// @RequestMapping(value = "/rest/funds/", method = RequestMethod.GET)
+	@RequestMapping(value = "/perso", method = RequestMethod.GET)
+	public String getAjaxAddPage() {
+		logger_c.debug("Received request to show AJAX, add page");
+
+		// This will resolve to /WEB-INF/jsp/ajax-perso.jsp
+		return "ajax-perso";
+
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getPersonnes() {
@@ -58,6 +64,7 @@ public class PersoController2 {
 
 		try {
 			personnes = dao.findAll();
+
 		} catch (Exception e) {
 			String sMessage = "Error getting all personnes. [%1$s]";
 			return createErrorResponse(String.format(sMessage, e.toString()));
@@ -149,6 +156,33 @@ public class PersoController2 {
 		/* set HTTP response code */
 		httpResponse_p.setStatus(HttpStatus.OK.value());
 		return new ModelAndView(jsonView_i, DATA_FIELD, perso);
+
+	}
+
+	@RequestMapping(value = "{id}", method = { RequestMethod.DELETE })
+	public ModelAndView delPersonne(@PathVariable Integer id,
+			HttpServletResponse httpResponse_p, WebRequest request_p) {
+
+		logger_c.debug("Deleting Personne: " + id);
+
+		/* validate fund Id parameter */
+		if ((id == null) || (id < 0)) {
+			String sMessage = "Error invoking getFund - Invalid fund Id parameter";
+			return createErrorResponse(sMessage);
+		}
+
+		try {
+
+			dao.deleteOne(id);
+
+		} catch (Exception e) {
+			String sMessage = "Error deleting new Personne. [%1$s]";
+			return createErrorResponse(String.format(sMessage, e.toString()));
+		}
+
+		/* set HTTP response code */
+		httpResponse_p.setStatus(HttpStatus.OK.value());
+		return new ModelAndView(jsonView_i, DATA_FIELD, null);
 
 	}
 
