@@ -14,7 +14,7 @@ import com.serisoft.dao.IPersoDao;
 import com.serisoft.model.Personne;
 
 @Controller
-@RequestMapping("/personne")
+@RequestMapping("/rest/personne")
 public class PersoController {
 
 	@Autowired
