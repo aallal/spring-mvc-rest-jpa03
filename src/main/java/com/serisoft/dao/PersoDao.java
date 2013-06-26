@@ -5,10 +5,13 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.serisoft.model.Personne;
+import com.serisoft.repository.PersoRepository;
+
 import static com.serisoft.model.Define.*;
 
 @Repository
@@ -17,28 +20,37 @@ public class PersoDao implements IPersoDao {
 	@PersistenceContext
 	private EntityManager em;
 
+	@Autowired 
+	private PersoRepository repo ;
+	
 	@Transactional()
-	public void deleteOne(Integer id) {
+	public Boolean deleteOne(Integer id) {
 
 		Personne p = this.findById(id);
 		if (p != null) {
-			em.remove(p);
+			repo.delete(p);
+			return true;
+			//em.remove(p);
 		} else {
-			throw new DaoException(String.format(msg_person_id_not_found, id),cs_id_not_found);
+			return false;
+			//throw new DaoException(String.format(msg_person_id_not_found, id),cs_id_not_found);
 		}
 
 	}
 
 	@Transactional(readOnly = true)
 	public List<Personne> findAll() {
-		return em.createQuery("select p from Personne p", Personne.class)
-				.getResultList();
+		return repo.findAll();
+		/*return em.createQuery("select p from Personne p", Personne.class)
+				.getResultList();*/
 
 	}
 
 	@Transactional(readOnly = true)
 	public Personne findById(Integer id) {
-		Personne perso = em.find(Personne.class, id);
+		Personne perso = repo.findOne(id);
+		
+		/*Personne perso = em.find(Personne.class, id);*/
 		if (perso == null) {
 			throw new DaoException(String.format(msg_person_id_not_found, id),
 					cs_id_not_found);
@@ -48,8 +60,13 @@ public class PersoDao implements IPersoDao {
 	}
 
 	@Transactional
-	public Personne save(Personne perso) {
-		try {
+	public Boolean save(Personne perso) {
+		
+		Personne persoSaved= repo.save(perso);
+		if (persoSaved==null) {return false;}
+		else return true ;
+		
+		/*try {
 			if (perso.getId() == null) {
 				em.persist(perso);
 			} else {
@@ -60,19 +77,9 @@ public class PersoDao implements IPersoDao {
 		} catch (Exception e) {
 			throw new DaoException(msg_error_save_person, cs_error_save);
 
-		}
+		}*/
 	}
 
-	@Transactional(readOnly = true)
-	public List<Personne> findAll(int page, int pageSize) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Transactional(readOnly = true)
-	public List<Personne> findByPrenom(String prenom, int page, int pageSize) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 }

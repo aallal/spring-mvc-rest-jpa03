@@ -8,9 +8,9 @@ public interface IPersoDao {
 	
 	List<Personne> findAll();
 	Personne findById(Integer id);
-	Personne save(Personne perso);
-	List<Personne> findAll(int page, int pageSize);
-	List<Personne> findByPrenom(String prenom, int page, int pageSize);
-	void deleteOne(Integer id );
+	Boolean save(Personne perso);
+//	List<Personne> findAll(int page, int pageSize);
+//	List<Personne> findByPrenom(String prenom, int page, int pageSize);
+	Boolean deleteOne(Integer id );
 	
 }

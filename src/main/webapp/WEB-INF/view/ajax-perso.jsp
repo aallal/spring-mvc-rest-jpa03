@@ -26,6 +26,11 @@
 <script type="text/javascript"
 	src="<c:url value="/resources/js/json.min.js" />"></script>
 
+<spring:message code="ajaxperso.getbyid" var="labelGetById"/>
+<spring:message code="ajaxperso.persoNom" var="persoNomLabel"/>
+<spring:message code="ajaxperso.persoPrenom" var="persoPrenomLabel"/>
+<spring:message code="ajaxperso.persoAge" var="persoAgeLabel"/>
+<spring:message code="ajaxperso.postPerso" var="postPersoBtnLabel"/>
 
 <!--  
 
@@ -38,37 +43,28 @@
 </style>
 </head>
 <body>
+<span style="float: right">
+    <a href="?lang=en">en</a>
+    |
+    <a href="?lang=fr">fr</a>
+</span>
+
 	<div id="contenu">
-		<h1>Page Personne</h1>
-		<p>Cette page démontre la puissance des fonctionnalités de Spring
-			MVC avec utilisation des fonctionnalités Ajax.</p>
-		<h2>Fonctionnalités implémentées</h2>
-		<ul>
-			<li>Utilisation de la méthode Get pour extraire la liste des
-				personnes
-			<li>Utilisation de la méthode Get pour extraire une personne
-				avec son identifiant ID
-			<li>Utilisation de la méthode POST pour ajouter une nouvelle
-				personne
-			<li>Utilisation de la méthode PUT pour modifier une personne
-			<li>Utilisation de la méthode DELETE pour supprimer une personne
-
-
-
-
-			
-		</ul>
-		<h2>Get By ID</h2>
+		<h1><spring:message code="ajaxperso.title"/></h1>
+		<p><spring:message code="ajaxperso.body"/></p>
+					
+		
+		<h2>${labelGetById}</h2>
 		<form id="getPersoForm">
-			<div class="error hide" id="idError">Please enter a valid ID</div>
+			<div class="error hide" id="idError">${ajaxperso.inputidLabel}</div>
 			<label for="persoId">ID : </label> <input name="id" id="persoID"
 				value="0" type="number" /> <input type="submit"
-				value="Get Personne par son ID" /> <br /> <br />
+				value=${labelGetById} /> <br /> <br />
 			<div id="personResponse"></div>
 		</form>
 
 		<hr>
-		<h2>Get liste personnes</h2>
+		<h2><spring:message code="ajaxperso.persolistlabel"/></h2>
 		<input type="submit" id="btn_get_personnes"
 			value="Get liste of persons" /><br /> <br />
 		<ul id="perso_list"></ul>
@@ -77,14 +73,14 @@
 
 
 		<hr>
-		<h2>Post new Person</h2>
+		<h2><spring:message code="ajaxperso.postpersolabel"/></h2>
 		<form id="newPersoForm">
-			<div class="error hide" id="idError">Please enter a valid ID</div>
-			<label for="persoName">Nom : </label> <input name="nom" id="id_nom"
-				type="text" /> <label for="persolName">Prénom : </label> <input
-				name="prenom" id="id_prenom" type="text" /> <label for="persoAge">Age
-				: </label> <input name="age" id="id_age" type="text" /> <input
-				type="submit" value="Post Personne" /> <br /> <br />
+			<div class="error hide" id="idError"></div>
+			<label for="persoName">${persoNomLabel} </label> <input name="nom" id="id_nom"
+				type="text" /> <label for="persolName">${persoPrenomLabel}</label> <input
+				name="prenom" id="id_prenom" type="text" /> 
+				<label for="persoAge">${persoAgeLabel}</label> <input name="age" id="id_age" type="text" /> 
+				<input type="submit" value=${postPersoBtnLabel} /> <br /> <br />
 			<div id="postPersonResponse"></div>
 		</form>
 
@@ -105,12 +101,11 @@
 							jq('#getPersoForm')
 									.submit(
 											function(e) {
-												alert("submit get person id !");
+												//alert("submit get person id !");
 												var persoID = jq('#persoID')
 														.val();
 												console.log(persoID);
-												jq
-														.getJSON(
+												jq.getJSON(
 																'${pageContext.request.contextPath}/rest/personne2/'
 																		+ persoID,
 																function(perso) {
@@ -119,12 +114,7 @@
 																	var dataObject = perso.data;
 																	console
 																			.log(dataObject);
-																	jq(
-																			'#postPersonResponse')
-																			.text(
-																					JSON
-																							.stringify(dataObject));
-
+																	jq('#personResponse').text(JSON.stringify(dataObject));
 																});
 												e.preventDefault(); // prevent actual form submit
 											});

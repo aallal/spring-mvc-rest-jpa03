@@ -36,6 +36,13 @@ public class Personne implements java.io.Serializable {
 		this.marie = marie;
 	}
 
+	public Personne( String nom, String prenom, short age) {
+		//this.id = id;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.age = age;
+	}
+	
 	public Personne(int id, String nom, String prenom, Short age,
 			Short nbenfants, Date dateNais, short marie) {
 		this.id = id;
