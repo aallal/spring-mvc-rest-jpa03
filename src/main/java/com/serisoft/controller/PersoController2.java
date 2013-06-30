@@ -54,7 +54,7 @@ public class PersoController2 {
 		logger_c.debug("Received request to show AJAX, add page");
 
 		// This will resolve to /WEB-INF/view/ajax-perso.jsp
-		return "ajax-perso";
+		return "ajaxpersopage";
 
 	}
 

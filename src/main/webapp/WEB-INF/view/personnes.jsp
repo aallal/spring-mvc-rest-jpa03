@@ -19,7 +19,7 @@
 <script type="text/javascript"
 	src="<c:url value="/resources/js/jquery/jquery-1.10.0.js" />"></script>
 <script type="text/javascript"
-	src="<c:url value="/resources/js/jquery/jquery-ui-1.10.3.custom.min.js" />"></script>
+	src="<c:url value="/resources/js/jquery/jquery-ui-1.10.3.custom.js" />"></script>
 <script type="text/javascript"
 	src="<c:url value="/resources/js/jquery/i18n/grid.locale-en.js" />"></script>
 <script type="text/javascript"
